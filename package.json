@@ -1,0 +1,29 @@
+{
+  "name": "node-javascript-starter",
+  "version": "1.0.0",
+  "description": "Rebase on me and make me your first commit for every new Javascript Script you make!",
+  "main": "index.js",
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "eslint": "^3.15.0",
+    "eslint-plugin-lodash": "^2.3.5",
+    "eslint-plugin-mocha": "^4.8.0",
+    "git-hooks": "^1.1.8",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clickthisnick/node-javascript-starter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clickthisnick/node-javascript-starter/issues"
+  },
+  "homepage": "https://github.com/clickthisnick/node-javascript-starter#readme"
+}
