@@ -1,0 +1,45 @@
+<!-- <script src="bundle.js"></script> -->
+<!-- <script src="../node_modules/clipboard/dist/clipboard.min.js"></script> -->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript" src="../build/bundle.js"></script>
+<script type="text/javascript" src="../node_modules/speller/lib/speller.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$.get("../node_modules/speller/bin/big.txt", null, function (data, textStatus) {
+			var lines = data.split("\n");
+			var count = lines.length;
+			lines.forEach(function (line) {
+					speller.train(line);
+				});
+		});
+	});
+</script>
+
+
+Message:
+<html>
+	<body>
+		<textarea id="msg" style="width:100%; height:20px; float:left;"></textarea>
+		<br>
+		<button style="float:right;" onclick="EntryPoint.validate(document, speller)">Validate</button>
+		Output:
+		<p id='validatedMsg'></p>
+		Errors:
+		<p id='errors'></p>
+		Warnings:
+		<p id='warnings'></p>
+		<button onclick="EntryPoint.validate(document)">Check</button>
+
+		<button class="copy-button" data-clipboard-text="
+		Hi
+
+		hi
+		">
+		    QA Priority List
+		</button>
+	</body>
+</html>
+<script>
+  var clipboard = new Clipboard('.copy-button');
+</script>
