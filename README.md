@@ -1,6 +1,6 @@
 # Slack Stats
 Slack gives you these stats about messaging:
-https://honestbuildings.slack.com/stats
+https://[companyName].slack.com/stats
 
 My goals are:
 1.) Reduce the amount of slack message I send
