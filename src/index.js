@@ -7,7 +7,28 @@ const _ = require('lodash'),
         _.map(ignoredMisspellings, (word) => word += 's'),
         ignoredMisspellings,
         ignoredMisspellingWithoutS
-    );
+    ),
+    wordMap = {
+        // Omit
+        lol: '',
+        haha: '',
+        hehe: '',
+        ha: '',
+
+        // Alias
+        gonna: 'going to',
+        wanna: 'want to',
+
+        // Remove Too Long
+        'didn\’t actually': 'didn\'t',
+        'didn\'t actually': 'didn\'t',
+        'really should': 'should',
+
+        // Capitalize
+        i: 'I', // eslint-disable-line id-length
+        github: 'Github',
+        asana: 'Asana'
+    };
 
 let errors = [],
     warnings = [];
@@ -69,13 +90,10 @@ function validateLine(string, speller) {
     string = applyQuestionMark(string);
 
     string = simplifyPunctuation(string);
-    string = omitWords(string);
-    string = applySentenceAliases(string);
-    string = applyWordAliases(string);
+    string = applyWordMapping(string);
 
     // Final Steps
     string = _.upperFirst(string);
-    string = capitalizeWords(string);
     string = applyPunctuationIfNone(string);
 
     // Warning Checks
@@ -87,17 +105,43 @@ function validateLine(string, speller) {
     return string;
 }
 
-function applySentenceAliases(sentence) {
-    const aliases = {
-        'didn\’t actually': 'didn\'t',
-        'didn\'t actually': 'didn\'t',
-        'really should': 'should'
-    };
+function mapMiddleSentence(alias, replace, sentence) {
+    const sanitizeSentence = sanitizeWord(sentence),
+        index = sanitizeSentence.indexOf(` ${alias} `),
+        aliasLength = index + ` ${alias} `.length;
 
-    _(aliases).keys().forEach((alias) => {
-        const re = new RegExp(alias, 'g');
+    if (index === -1) {
+        return sentence;
+    }
 
-        sentence = sentence.replace(re, aliases[alias]);
+    sentence = `${sentence.slice(0, index)} ${replace} ${sentence.slice(aliasLength)}`;
+
+    return mapMiddleSentence(alias, replace, sentence);
+}
+
+function applyWordMapping(sentence) {
+    _(wordMap).keys().sort().forEach((alias) => {
+
+        sentence = mapMiddleSentence(alias, wordMap[alias], sentence);
+
+        const sanitizedSentence = sanitizeWord(sentence);
+
+        // Beginning of sentence
+        if (sanitizedSentence.startsWith(`${alias} `)) {
+            sentence = sentence.slice(`${alias} `.length);
+            if (wordMap[alias].length > 0) {
+                sentence = `${wordMap[alias]} ${sentence}`;
+            }
+        }
+
+        // End of sentence
+        if (sanitizedSentence.endsWith(` ${alias}`)) {
+
+            sentence = sentence.slice(0, sentence.length - ` ${alias}`.length);
+            if (wordMap[alias].length > 0) {
+                sentence += ` ${wordMap[alias]}`;
+            }
+        }
     });
 
     return sentence;
@@ -112,22 +156,6 @@ function removeBadFirstWord(sentence) {
         });
 
     return _.join(nonBayWordArray, ' ');
-}
-
-function applyWordAliases(sentence) {
-    const aliases = {
-            gonna: 'going to',
-            wanna: 'want to'
-        },
-        nonAliasedArray = sentence.split(' ').map((word) => {
-            const sanitizedWord = sanitizeWord(word),
-                isWordAnAlias = _.includes(_.keys(aliases), sanitizedWord);
-
-            return isWordAnAlias ? aliases[sanitizedWord] : word;
-        });
-
-    return _.join(nonAliasedArray, ' ');
-
 }
 
 function removeWhiteSpace(string) {
@@ -146,29 +174,6 @@ function simplifyPunctuation(string) {
     string = string.replace(/\?\?+/g, '?');
 
     return string;
-}
-
-function omitWords(string) {
-    const wordToOmit = ['lol', 'haha', 'hehe', 'ha'],
-        sentence = string.split(' ').filter((word) => {
-            const sanitizedWord = sanitizeWord(word);
-
-            return wordToOmit.includes(sanitizedWord) ? '' : word;
-        });
-
-    return sentence.join(' ');
-}
-
-function capitalizeWords(string) {
-    const wordToCapitalize = ['i', 'github', 'asana'],
-        capitalizedPeopleString = string.split(' ').map((word) => {
-            const sanitizedWord = sanitizeWord(word),
-                isSupposedToBeCapitalized = wordToCapitalize.includes(sanitizedWord);
-
-            return isSupposedToBeCapitalized ? _.upperFirst(word) : word;
-        });
-
-    return capitalizedPeopleString.join(' ');
 }
 
 function applyQuestionMark(string) {
@@ -195,9 +200,13 @@ function checkForStringInSentence(string) {
 
     if (sanitizedSentence.includes(' otherwise ')) {
         errors.push('Saying otherwise with a question sucks, reword it!');
-    } else if (sanitizedSentence.includes('i think')) {
+    }
+
+    if (sanitizedSentence.includes('i think')) {
         errors.push('No "I think", you either know or do not know');
-    } else if (sanitizedSentence.includes(' or ')) {
+    }
+
+    if (sanitizedSentence.includes(' or ')) {
         errors.push('Using the word or sucks. Do not use it, reword your sentence');
     }
 }
