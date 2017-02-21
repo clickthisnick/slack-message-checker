@@ -105,26 +105,39 @@ function validateLine(string, speller) {
     return string;
 }
 
-function applyWordMapping(sentence) {
-    sentence = sanitizeWord(sentence);
+function mapMiddleSentence(alias, replace, sentence) {
+    const sanitizeSentence = sanitizeWord(sentence),
+        index = sanitizeSentence.indexOf(` ${alias} `),
+        aliasLength = index + ` ${alias} `.length;
 
+    if (index === -1) {
+        return sentence;
+    }
+
+    sentence = `${sentence.slice(0, index)} ${replace} ${sentence.slice(aliasLength)}`;
+
+    return mapMiddleSentence(alias, replace, sentence);
+}
+
+function applyWordMapping(sentence) {
     _(wordMap).keys().sort().forEach((alias) => {
 
-        // If they appear midsentence
-        const re = new RegExp(` ${alias} `, 'g');
+        sentence = mapMiddleSentence(alias, wordMap[alias], sentence);
 
-        sentence = sentence.replace(re, ` ${wordMap[alias]} `);
+        const sanitizedSentence = sanitizeWord(sentence);
 
         // Beginning of sentence
-        if (sentence.startsWith(`${alias} `)) {
-            // Replaces first occurence only
-            sentence = sentence.replace(`${alias} `, `${wordMap[alias]} `);
+        if (sanitizedSentence.startsWith(`${alias} `)) {
+            sentence = sentence.slice(`${alias} `.length);
+            if (wordMap[alias].length > 0) {
+                sentence = `${wordMap[alias]} ${sentence}`;
+            }
         }
 
         // End of sentence
-        if (sentence.endsWith(` ${alias}`)) {
-            // Replaces slice off end and replace with map value
-            sentence = sentence.slice(0, sentence.length - alias.length);
+        if (sanitizedSentence.endsWith(` ${alias}`)) {
+
+            sentence = sentence.slice(0, sentence.length - ` ${alias}`.length);
             if (wordMap[alias].length > 0) {
                 sentence += ` ${wordMap[alias]}`;
             }
