@@ -1,4 +1,6 @@
 # Slack Stats
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/clickthisnick/slack-message-checker.svg)](https://greenkeeper.io/)
 Slack gives you these stats about messaging:
 https://[companyName].slack.com/stats
 
