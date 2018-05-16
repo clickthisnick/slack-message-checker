@@ -2,7 +2,7 @@ module.exports = {
     entry: './src/index.js',
     target: 'web',
     output: {
-        path: './build',
+        path: `${__dirname}/build`,
         filename: 'bundle.js',
         libraryTarget: 'var',
         library: 'EntryPoint'

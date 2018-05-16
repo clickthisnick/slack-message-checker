@@ -2,13 +2,17 @@
 Slack gives you these stats about messaging:
 https://[companyName].slack.com/stats
 
+# To Run
+npm install && npm run build;
+open src/index.html
+
 My goals are:
-1.) Reduce the amount of slack message I send
-2.) Increase the effectiveness of my messages
+1. Reduce the amount of slack message I send
+2. Increase the effectiveness of my messages
 
 The rules are going to be:
-1.) Ensure questions end with a question mark - To ensure people get I'm looking for a response
-2.) Ensure all messages either have a link to somewhere or are relevant - No more lols
+1. Ensure questions end with a question mark - To ensure people get I'm looking for a response
+2. Ensure all messages either have a link to somewhere or are relevant - No more lols
 
 To do this I'm going to quickly create an html place to type messages.
 Then clicking a button with validate my message as either to send or not send.

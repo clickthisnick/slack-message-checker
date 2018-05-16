@@ -25,7 +25,7 @@
     "webpack": "^2.2.1"
   },
   "scripts": {
-    "build": "webpack; http-server ."
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
