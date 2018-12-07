@@ -4,7 +4,7 @@
   "description": "This is used to check messages before I send them",
   "main": "index.js",
   "dependencies": {
-    "bluebird": "^3.4.7",
+    "bluebird": "^3.5.3",
     "browserify": "^14.1.0",
     "clipboard": "^1.6.0",
     "eslint": "^3.15.0",
@@ -12,7 +12,7 @@
     "eslint-plugin-mocha": "^4.8.0",
     "git-hooks": "^1.1.8",
     "jquery": "^3.1.1",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.11",
     "mocha": "^3.2.0",
     "nlp-compromise": "^6.7.4",
     "node-loader": "^0.6.0",
