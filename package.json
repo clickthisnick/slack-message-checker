@@ -11,7 +11,7 @@
     "eslint-plugin-lodash": "^5.1.0",
     "eslint-plugin-mocha": "^5.2.0",
     "git-hooks": "^1.1.8",
-    "jquery": "^3.1.1",
+    "jquery": "^3.5.0",
     "lodash": "^4.17.11",
     "mocha": "^5.2.0",
     "nlp-compromise": "^7.0.0",
